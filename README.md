@@ -10,3 +10,6 @@ Raylib
 ## Usage  
 left and right to navigate
 esc quits  
+
+## Screenshots  
+![screenshot.png](https://raw.githubusercontent.com/aussie114/ab_workout/refs/heads/master/screenshots/screenshot.png)
