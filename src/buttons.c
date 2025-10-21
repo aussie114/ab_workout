@@ -41,7 +41,7 @@ void process_buttons(void)
 	{
 		if (CheckCollisionPointRec(GetMousePosition(), play_pause_button))
 		{
-			DrawTextureRec(pause_button_hover,  (Rectangle){0,0,90,90},  (Vector2){0, 0}, WHITE);
+			DrawTextureRec(play_button_hover,  (Rectangle){0,0,90,90},  (Vector2){0, 0}, WHITE);
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && time_remaining < exercises[stage].interval)
 			{
 				paused = !paused;
@@ -49,14 +49,14 @@ void process_buttons(void)
 		}
 		else
 		{
-			DrawTextureRec(pause_button_normal,  (Rectangle){0,0,90,90}, (Vector2){0, 0}, WHITE);
+			DrawTextureRec(play_button_normal,  (Rectangle){0,0,90,90}, (Vector2){0, 0}, WHITE);
 		}
 	}
 	else
 	{
 		if (CheckCollisionPointRec(GetMousePosition(), play_pause_button))
 		{
-			DrawTextureRec(play_button_hover,  (Rectangle){0,0,90,90},   (Vector2){0, 0}, WHITE);
+			DrawTextureRec(pause_button_hover,  (Rectangle){0,0,90,90},   (Vector2){0, 0}, WHITE);
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && time_remaining < exercises[stage].interval)
 			{
 				paused = !paused;
@@ -64,7 +64,7 @@ void process_buttons(void)
 		}
 		else
 		{
-			DrawTextureRec(play_button_normal,  (Rectangle){0,0,90,90},  (Vector2){0, 0}, WHITE);
+			DrawTextureRec(pause_button_normal,  (Rectangle){0,0,90,90},  (Vector2){0, 0}, WHITE);
 		}
 	}
 
