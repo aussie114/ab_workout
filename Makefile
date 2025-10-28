@@ -26,7 +26,7 @@ run: build
 	emrun web_export/index.html
 
 build:   $(WEB_OBJECTS)
-	emcc -o web_export/index.html main/web_main.c      lib/libraylib.web.a build/web/*.o -Iinclude -Wall -Wextra -Os  --shell-file include/shell.html -s USE_GLFW=3 -s ASYNCIFY --preload-file data -s TOTAL_MEMORY=67108864 
+	emcc -o web_export/index.html main/web_main.c      lib/libraylib.web.a build/web/*.o -Iinclude -Wall -Wextra -Os  --shell-file include/shell.html -s USE_GLFW=3 -s ASYNCIFY --preload-file data -s TOTAL_MEMORY=134217728
 	zip web_export/$(PROJECT).zip web_export/index.*
 
 build/web/%.o: src/%.c

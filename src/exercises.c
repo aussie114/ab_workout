@@ -1,119 +1,88 @@
+#include "raylib.h"
 #include "exercises.h"
 #include "sounds.h"
-#include "colours.h"
+#include "fade.h"
+#include "fonts.h"
+#include "textures.h"
 
-int paused = 0;
-int stage = 0;
-float time_remaining = 32;
-int fade = 255;
-Exercise exercises[STAGES];
-
-void setup_exercises()
+Exercise_variables exercise = 
 {
-	exercises[ 0] = (Exercise){"plank",                    29, LoadTexture("data/plank.png")};
-	exercises[ 1] = (Exercise){"plank twist",              29, LoadTexture("data/plank_twist.png")};
-	exercises[ 2] = (Exercise){"mountain climbers",        29, LoadTexture("data/mountain_climbers.png")};
-	exercises[ 3] = (Exercise){"spiderman plank",          29, LoadTexture("data/spiderman_planks.png")};
+	0,
+	0,
+	5,
+	34,
+	{
+		{"plank",                     (Vector2){0, 630},  29, &textures.plank                }, // 0 
+		{"plank twists",              (Vector2){0, 630},  29, &textures.plank_twist          }, // 1 
+		{"mountain climbers",         (Vector2){0, 630},  29, &textures.mountain_climbers    }, // 2 
+		{"spiderman planks",          (Vector2){0, 630},  29, &textures.spider_man_planks    }, // 3 
+		{"side plank",                (Vector2){0, 630},  19, &textures.sideplank            }, // 4 
+		{"side planks (dips)",        (Vector2){0, 630},  19, &textures.sideplank_dips       }, // 5 
+		{"side planks (leg raises)",   (Vector2){0, 630},  9, &textures.sideplank_leg_raises }, // 6 
+		{"side planks (reaches)",     (Vector2){0, 630},   9, &textures.sideplank_reachers   }, // 7 
 
-	exercises[ 4] = (Exercise){"side plank",               19, LoadTexture("data/side_plank.png")};
-	exercises[ 5] = (Exercise){"side plank (dips)",        19, LoadTexture("data/side_plank_dip.png")};
-	exercises[ 6] = (Exercise){"side plank (leg lifts)",    9, LoadTexture("data/side_plank_leg_raises.png")};
-	exercises[ 7] = (Exercise){"side plank (reaches)",      9, LoadTexture("data/side_plank_reaches.png")};
+		{"scissor kicks",             (Vector2){0, 630},  19, &textures.scissor_kicks        }, // 8
+		{"butterfly kicks",           (Vector2){0, 630},  19, &textures.butterfly_kicks      }, // 9 
+		{"mermaids",                  (Vector2){0, 630},  19, &textures.mermaids             }, //10
+		{"toe touches (both hands)",  (Vector2){0, 630},  19, &textures.toe_touch            }, //11 
+		{"toe touches (alternating)", (Vector2){0, 630},  19, &textures.toe_touch            }, //12 
+		{"toe touches (side by side)",(Vector2){0, 630},  19, &textures.toe_touch            }, //13 
 
-	exercises[ 8] = (Exercise){"scissor_kicks",            19, LoadTexture("data/scissor_kicks.png")};
-	exercises[ 9] = (Exercise){"butterfly kicks",          19, LoadTexture("data/butterfly_kicks.png")};
-	exercises[10] = (Exercise){"mermaids",                 19, LoadTexture("data/mermaids.png")};
+		{"crunches (90 degrees)",     (Vector2){0, 630},  29, &textures.crunches_90_degrees  }, //14 
+		{"crunches (180 degrees)",    (Vector2){0, 630},  29, &textures.crunches_180_degrees }, //15
+		{"bicycle kicks",             (Vector2){0, 630},  29, &textures.bicycle_kicks        }, //16 
+		{"reverse crunches",          (Vector2){0, 630},  29, &textures.reverse_crunches     }, //17 
 
-	exercises[11] = (Exercise){"toe touch (both hands)",   19, LoadTexture("data/toe_touch.png")};
-	exercises[12] = (Exercise){"toe touch (alternating)",  19, exercises[11].image};
-	exercises[13] = (Exercise){"toe touch (side by side)", 19, exercises[11].image};
+		{"swaskickers (slow)",        (Vector2){0, 630},  29, &textures.swaskickers          }, //18
+		{"swaskickers (fast)",        (Vector2){0, 630},  29, &textures.swaskickers          }, //19 
+		{"crunches",                  (Vector2){0, 630},  29, &textures.crunches             }, //20 
+		{"knee reachers",             (Vector2){0, 630},  19, &textures.knee_reaches         }, //21 
+		{"ankle touches",             (Vector2){0, 630},  19, &textures.ankle_touches        }, //22 
+		{"in and outs",               (Vector2){0, 630},  29, &textures.in_and_outs          }, //23 
+		{"russian twists",            (Vector2){0, 630},  29, &textures.russian_twists       }, //24
+	},
+	{0,0,0,0,0},
+};
 
-	exercises[14] = (Exercise){"crunches (90 degree)",     29, LoadTexture("data/90_degree_crunches.png")};
-	exercises[15] = (Exercise){"crunches (180 degree)",    29, LoadTexture("data/180_degree_crunches.png")};
-
-	exercises[16] = (Exercise){"bicycle kicks",            29, LoadTexture("data/bicycle_kicks.png")};
-
-	exercises[17] = (Exercise){"reverse crunches",         29, LoadTexture("data/reverse_crunches.png")};
-
-	exercises[18] = (Exercise){"swaskickers (slow)",       29, LoadTexture("data/swaskickers.png")};
-	exercises[19] = (Exercise){"swaskickers (fast)",       29, exercises[18].image};
-
-	exercises[20] = (Exercise){"crunches",                 29, LoadTexture("data/crunches.png")};
-
-	exercises[21] = (Exercise){"knee Reachers",            19, LoadTexture("data/knee_reaches.png")};
-
-	exercises[22] = (Exercise){"ankle touches",            19, LoadTexture("data/ankle_touches.png")};
-	
-	exercises[23] = (Exercise){"in and outs",              29, LoadTexture("data/in_and_outs.png")};
-	
-	exercises[24] = (Exercise){"russian twists",           29, LoadTexture("data/russian_twists.png")};
-
-	exercises[25] = (Exercise){"",                          0, LoadTexture("data/end_background.png")};
-}
-
-void reset_values(void)
-{
-	fade = 255;
-	time_remaining = exercises[stage].interval + 3;
-}
+Rectangle draw_destination = {0, 0, 1280, 480};
+Vector2 draw_position = {0, -120};
 
 void process_exercises()
 {
-
-	DrawTexture(exercises[stage].image, 0, 0, (Color){255, 255, 255, fade});           // Draw exercise image
-	if (stage == 25)
+	if (exercise.stage == 25)
 	{
-		DrawText("you did it!", 500, 30, 150, COLOUR_TEXT);
+		DrawTexture(textures.end_screen, 0, 0, WHITE);
 		return;
 	}
+	DrawTexture(*exercise.exercises[exercise.stage].image, 0, 120, WHITE);
 
-
-	if (time_remaining > exercises[stage].interval)
+	if      (IsKeyPressed(KEY_RIGHT) && exercise.stage < STAGES - 1) 
 	{
-		DrawText("Next exercise", 355, 5, 80, COLOUR_TEXT);
+		exercise.stage++;
+		fade.alpha = 0;
+		exercise.time_remaining = exercise.exercises[exercise.stage].interval + exercise.delay;
 	}
-	else
+	else if (IsKeyPressed(KEY_LEFT) && exercise.stage > 0) 
 	{
-		DrawText(TextFormat("%02.0f", time_remaining), 600, 5, 80, COLOUR_TEXT); // Draw time remaining
+		exercise.stage--;
+		fade.alpha = 0;
+		exercise.time_remaining = exercise.exercises[exercise.stage].interval + exercise.delay;
 	}
 
-	int spacing = (TextLength(exercises[stage].label) / 2) * 40;
-	DrawText(exercises[stage].label, 640 - spacing, 630, 80, COLOUR_TEXT);                               // Draw Exercise label
-
-	if (time_remaining > 0 && !paused)
+	if (exercise.time_remaining > 0 && !exercise.paused)
 	{
-		time_remaining -= GetFrameTime();
+		exercise.time_remaining -= GetFrameTime();
 	}
 	
-	if (time_remaining < 0)
+	if (exercise.time_remaining < 0)
 	{
-		time_remaining = 0;
-		PlaySound(beep);
+		exercise.time_remaining = 0;
+		PlaySound(sounds.beep);
 	}
 
-	if (time_remaining == 0 && stage < STAGES - 1 && !paused)
+	if (exercise.time_remaining == 0 && fade.alpha == 1)
 	{
-		fade -= 5;
+		exercise.stage++;
+		exercise.time_remaining = exercise.exercises[exercise.stage].interval + exercise.delay;
 	}
-
-	if (fade < 5)
-	{
-		stage++;
-		reset_values();
-	}
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

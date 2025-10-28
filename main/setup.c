@@ -1,22 +1,44 @@
 #include "raylib.h"
-#include "buttons.h"
+#include "mouse.h"
+#include "screen.h"
 #include "sounds.h"
+#include "fonts.h"
 #include "exercises.h"
+#include "process.h"
+#include "textures.h"
 
-float screen_width = 1280;
-float screen_height = 720;
-float aspect_ration = 0;
-RenderTexture2D virtual_screen;
+Mouse_variables mouse;
+Screen_variables screen;
+Sounds_variables sounds;
+Font_variables fonts;
+//Texture_variables textures;
 
-void setup(bool web)
+void setup(int web)
 {
-	aspect_ration = screen_width / screen_height;
-//	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(screen_width, screen_height, "game");
-	virtual_screen = LoadRenderTexture(screen_width, screen_height);
+	InitWindow(SCREEN_X, SCREEN_Y, "Ab Workout");
 	if (!web) {SetTargetFPS(60);}
+
+	// Load mouse
+	mouse.position = GetMousePosition();
+
+	// Load screen
+	screen.width  = 1280;
+	screen.height =  720;
+	screen.position = (Vector2){0,0};
+	screen.scale  = 1;
+	screen.virtual_screen = LoadRenderTexture(screen.width, screen.height);
+	screen.virtual_area   = (Rectangle){0,0,1280,-720};
+	screen.destination    = (Rectangle){0,0,1280,720};
+
+	// Load sounds
 	InitAudioDevice();
-	load_sounds();
-	setup_buttons();
-	setup_exercises();
+	sounds.beep = LoadSound("data/beep.wav");
+
+	// Load fonts
+	fonts.ubuntu_mono_80  = LoadFontEx("data/UbuntuMono-Regular.ttf",  80, 0, 0);
+	fonts.ubuntu_mono_130 = LoadFontEx("data/UbuntuMono-Regular.ttf", 130, 0, 0);
+	fonts.colour = (Color){51, 51, 51, 255};
+
+	// Load textures
+	load_textures();
 }

@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "setup.c"
-#include "process.c"
+#include "process.h"
 
 int main(void)
 {

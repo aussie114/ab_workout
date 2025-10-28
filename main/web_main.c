@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "setup.c"
-#include "process.c"
+#include "process.h"
 #include <emscripten/emscripten.h>
 
 int main(void)
